@@ -26,6 +26,7 @@ public class DocumentService {
     private final DocumentRepository documentRepository;
     private final DocumentParser documentParser;
     private final FileStorageService fileStorageService;
+    private final ChunkingService chunkingService;
 
     @Transactional
     public DocumentUploadResponse processUpload(MultipartFile file) {
@@ -54,6 +55,9 @@ public class DocumentService {
             document.updateExtractedText(extractedText);
 
             Document savedDocument = documentRepository.save(document);
+
+            // 문서 본문을 Chunk 단위로 분할하여 저장
+            chunkingService.splitAndSave(savedDocument, extractedText);
 
             return new DocumentUploadResponse(
                     savedDocument.getId(),
