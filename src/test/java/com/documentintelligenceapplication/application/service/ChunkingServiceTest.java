@@ -23,21 +23,20 @@ class ChunkingServiceTest {
     private ChunkingService chunkingService;
 
     @Test
-    void testChunkingWithStatistics() {
-        // Given
-        ReflectionTestUtils.setField(chunkingService, "chunkSize", 1000);
-        ReflectionTestUtils.setField(chunkingService, "chunkOverlap", 200);
-
+    void runChunkingOptimizationExperiment() {
+        // Given: 15,000자 분량의 더 길고 정교한 문서 텍스트 시뮬레이션
         StringBuilder sb = new StringBuilder();
-        for (int i = 1; i <= 30; i++) {
+        for (int i = 1; i <= 80; i++) {
             sb.append("Sentence ").append(i)
-              .append(": Document Intelligence Platform is designed to help users solve complex tasks using advanced agentic workflows. ")
-              .append("We split documents into meaningful chunks for LLM ingestion.\n\n");
+              .append(": The Document Intelligence Platform leverages Spring Boot 3.5.x and Spring AI to process high-volume documents. ")
+              .append("By implementing modern Retrieval-Augmented Generation (RAG) pipelines, the system splits texts into logical segments. ")
+              .append("This is an important optimization phase where we evaluate the context density, chunk size, and chunk overlap. ")
+              .append("We aim to find the best configuration that minimizes context fragmentation while fitting within the model limits.\n\n");
         }
         String text = sb.toString();
 
         Document document = Document.builder()
-                .fileName("sample-spec.pdf")
+                .fileName("optimization-test.pdf")
                 .filePath("/mock/path")
                 .fileType("pdf")
                 .fileSize((long) text.length())
@@ -45,10 +44,22 @@ class ChunkingServiceTest {
                 .processingStatus(ProcessingStatus.UPLOADED)
                 .build();
 
-        // When
-        chunkingService.splitAndSave(document, text);
+        int[] sizes = {300, 500, 800, 1000};
+        
+        System.out.println("==================================================");
+        System.out.println("       CHUNKING OPTIMIZATION EXPERIMENT           ");
+        System.out.println("       Total Document Chars: " + text.length());
+        System.out.println("==================================================");
 
-        // Then
-        verify(chunkRepository, atLeastOnce()).save(any());
+        for (int size : sizes) {
+            // Overlap은 size의 20%로 동적 할당
+            int overlap = size / 5;
+            ReflectionTestUtils.setField(chunkingService, "chunkSize", size);
+            ReflectionTestUtils.setField(chunkingService, "chunkOverlap", overlap);
+
+            System.out.println("\n[Experiment Configuration] Chunk Size: " + size + " Tokens, Overlap: " + overlap + " Chars");
+            chunkingService.splitAndSave(document, text);
+        }
+        System.out.println("==================================================");
     }
 }
