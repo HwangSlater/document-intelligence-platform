@@ -34,5 +34,5 @@ spring:
 
 app:
   chunking:
-    size: 1000
-    overlap: 200
+    size: 500
+    overlap: 100
