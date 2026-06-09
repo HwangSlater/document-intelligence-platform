@@ -25,3 +25,20 @@
 * **기존 이미지**: `postgres:latest`
 * **변경 이미지**: `pgvector/pgvector:pg16`
 * **사유**: 06_database_design.md에서 정의된 PGVector 기반 고속 벡터 검색 기능을 컨테이너 레벨에서 즉시 지원하기 위함입니다.
+
+---
+
+## [2026-06-09] Phase 2 데이터베이스 스키마 변경 보고
+
+### 1. 데이터베이스 테이블 스키마 신규 추가
+* **대상 테이블**: `documents`
+* **상세 구조**:
+  * `id`: UUID (Primary Key)
+  * `file_name`: VARCHAR(255) (사용자가 업로드한 원본 파일명)
+  * `file_path`: VARCHAR(500) (서버 내 로컬 파일 저장 경로)
+  * `file_type`: VARCHAR(50) (파일 확장자 형식, e.g., pdf)
+  * `file_size`: BIGINT (파일 용량 바이트 크기)
+  * `upload_date`: TIMESTAMP (업로드 및 생성 일시)
+  * `extracted_text`: TEXT / LOB (문서로부터 파싱 추출된 전체 텍스트 본문)
+  * `processing_status`: VARCHAR(50) (문서 처리 상태: `UPLOADED`, `PARSED`, `FAILED`)
+* **사유**: 업로드된 문서의 메타데이터와 파일 경로를 관리하고, 텍스트 추출 검증을 위해 추출한 본문을 통합 테이블 컬럼(`extracted_text`)에 임시 보관하기 위함입니다. (이번 Phase에서는 Chunk 엔티티를 분리하지 않음)
