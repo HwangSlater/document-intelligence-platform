@@ -42,3 +42,17 @@
   * `extracted_text`: TEXT / LOB (문서로부터 파싱 추출된 전체 텍스트 본문)
   * `processing_status`: VARCHAR(50) (문서 처리 상태: `UPLOADED`, `PARSED`, `FAILED`)
 * **사유**: 업로드된 문서의 메타데이터와 파일 경로를 관리하고, 텍스트 추출 검증을 위해 추출한 본문을 통합 테이블 컬럼(`extracted_text`)에 임시 보관하기 위함입니다. (이번 Phase에서는 Chunk 엔티티를 분리하지 않음)
+
+---
+
+## [2026-06-09] Phase 3 데이터베이스 스키마 변경 보고
+
+### 1. 데이터베이스 테이블 스키마 신규 추가
+* **대상 테이블**: `chunks`
+* **상세 구조**:
+  * `id`: UUID (Primary Key)
+  * `document_id`: UUID (외래 키, documents 테이블의 id 참조. ON DELETE CASCADE)
+  * `chunk_index`: INT (문서 내 청크 순서 보장 인덱스, 0부터 시작)
+  * `content`: TEXT (분할된 텍스트 본문 조각)
+  * `created_at`: TIMESTAMP (생성 일시)
+* **사유**: 추출된 긴 문서 본문을 대형 언어 모델(LLM)이 처리할 수 있는 의미 단위(1000자 규격)로 재귀 분할하여, 개별 청크 단위로 영속화 관리하기 위함입니다.
