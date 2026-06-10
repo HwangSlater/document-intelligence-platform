@@ -43,7 +43,7 @@
 
 ```mermaid
 graph TD
-    Client[Client / Rest Client] -->|POST /api/v1/rag/ask (question)| Controller[RagController]
+    Client[Client / Rest Client] -->|POST /api/v1/rag/ask - question| Controller[RagController]
     Controller -->|RagRequest| Service[RagService]
     Service -->|search question, limit=5| Retrieval[RetrievalService]
     Retrieval -->|query text| OpenAI_Embed[OpenAI EmbeddingModel]
@@ -60,10 +60,10 @@ graph TD
     
     PromptBuild -->|Prompt| ChatModel[OpenAI ChatModel]
     ChatModel -->|ChatResponse| Service
-    Service -->|RagResponse (question, answer)| Controller
+    Service -->|RagResponse - question and answer| Controller
     Controller -->|JSON Response| Client
     
-    BypassResponse -->|RagResponse (question, answer)| Controller
+    BypassResponse -->|RagResponse - question and answer| Controller
 ```
 
 ---
