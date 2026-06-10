@@ -20,15 +20,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RagService {
 
-    private static final String SYSTEM_INSTRUCTION = 
+    private static final String COMBINED_TEMPLATE = 
         "당신은 문서 지능 플랫폼의 RAG QA 전문 어시스턴트입니다.\n" +
-        "아래 제공되는 'Context' 안의 정보만을 사용하여 사용자의 'Question'에 친절하고 정확하게 답변하십시오.\n" +
-        "만약 제공된 Context 내용과 사용자의 질문 내용 사이에 아무런 연관성이 없거나 답변할 근거가 없다면, " +
-        "절대 답변을 지어내지 말고 반드시 다음과 같이 답변하십시오:\n" +
-        "'제공된 문서 내에 해당 질문에 답변할 수 있는 관련 정보가 존재하지 않습니다.'";
-
-    private static final String USER_TEMPLATE = 
-        "Context:\n%s\n\nQuestion:\n%s";
+        "반드시 아래 제공되는 'Context' 안의 정보만을 사용하여 사용자의 'Question'에 친절하고 정확하게 답변하십시오.\n" +
+        "제공된 Context 내용과 사용자의 질문 내용 사이에 연관성이 없거나 답변할 근거가 부족하다면, " +
+        "절대 임의로 지어내지 말고 정확히 다음과 같이 답변하십시오:\n" +
+        "'제공된 문서 내에 해당 질문에 답변할 수 있는 관련 정보가 존재하지 않습니다.'\n\n" +
+        "Context:\n%s\n\n" +
+        "Question:\n%s";
 
     private final RetrievalService retrievalService;
     private final ChatModel chatModel;
@@ -61,9 +60,8 @@ public class RagService {
                 .collect(Collectors.joining("\n\n---\n\n"));
 
         // 4. Prompt 생성 및 ChatModel 명시적 호출
-        SystemMessage systemMessage = new SystemMessage(SYSTEM_INSTRUCTION);
-        UserMessage userMessage = new UserMessage(String.format(USER_TEMPLATE, context, request.getQuestion()));
-        Prompt prompt = new Prompt(List.of(systemMessage, userMessage));
+        String promptContent = String.format(COMBINED_TEMPLATE, context, request.getQuestion());
+        Prompt prompt = new Prompt(promptContent);
 
         log.info("Requesting answer generation from OpenAI ChatModel...");
         ChatResponse chatResponse;

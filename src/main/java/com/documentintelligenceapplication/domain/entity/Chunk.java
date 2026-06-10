@@ -25,7 +25,6 @@ public class Chunk {
     @Column(nullable = false)
     private Integer chunkIndex;
 
-    @Lob
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 

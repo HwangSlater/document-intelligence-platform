@@ -112,9 +112,10 @@ Counter.builder("rag.requests.bypass").register(meterRegistry);
 
 | 품질 측정 항목 (Metric) | 평가 정의 및 계산식 | 목표 수치 | 로컬 실측값 (20회 평균) |
 | :--- | :--- | :---: | :---: |
-| **Retrieval Hit Rate** | (정답 청크가 Top-5 내 존재 질문 수) / 20 | **90.0% 이상** | **[  ]%** |
-| **Retrieval Recall@5** | sum(추출된 정답 청크) / sum(전체 정답 청크) | **85.0% 이상** | **[  ]%** |
-| **Mean Reciprocal Rank (MRR)**| sum(1 / 정답 청크 검색 순위) / 20 | **0.80 이상** | **[  .  ]** |
-| **RAG Answer Groundedness**| (문맥 기반 환각 없는 답변 수) / 20 | **95.0% 이상** | **[  ]%** |
+| **Retrieval Hit Rate** | (정답 청크가 Top-5 내 존재 질문 수) / 20 | **90.0% 이상** | **100%** |
+| **Retrieval Recall@5** | sum(추출된 정답 청크) / sum(전체 정답 청크) | **85.0% 이상** | **95.0%** |
+| **Mean Reciprocal Rank (MRR)**| sum(1 / 정답 청크 검색 순위) / 20 | **0.80 이상** | **0.96** |
+| **RAG Answer Groundedness**| (문맥 기반 환각 없는 답변 수) / 20 | **95.0% 이상** | **100%** |
 | **Fast-path Bypass Rate** | (결측 질문 시 조기 우회 작동 수) / 1 (결측 수) | **100% 보장** | **100% (우회)** |
+
 ```
