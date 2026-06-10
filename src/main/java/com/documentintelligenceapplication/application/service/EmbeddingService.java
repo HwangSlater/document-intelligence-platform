@@ -34,6 +34,7 @@ public class EmbeddingService {
      * 3. OpenAI Embedding API Batch 호출
      * 4. JdbcTemplate을 통한 일괄/개별 임베딩 적재 및 통계 로깅
      */
+    @Transactional
     public void embedDocument(UUID documentId) {
         // 1. 문서 및 청크 리스트 조회
         Document document = documentRepository.findById(documentId)
