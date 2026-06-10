@@ -32,10 +32,7 @@ public class ChunkingService {
             return;
         }
 
-        TokenTextSplitter splitter = TokenTextSplitter.builder()
-                .withChunkSize(chunkSize)
-                .withMinChunkSizeChars(chunkOverlap)
-                .build();
+        TokenTextSplitter splitter = new TokenTextSplitter(chunkSize, chunkOverlap, 10, 10000, true);
 
         org.springframework.ai.document.Document originalDoc = 
                 new org.springframework.ai.document.Document(text);

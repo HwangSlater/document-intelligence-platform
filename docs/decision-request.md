@@ -56,3 +56,19 @@
   * `content`: TEXT (분할된 텍스트 본문 조각)
   * `created_at`: TIMESTAMP (생성 일시)
 * **사유**: 추출된 긴 문서 본문을 대형 언어 모델(LLM)이 처리할 수 있는 의미 단위(1000자 규격)로 재귀 분할하여, 개별 청크 단위로 영속화 관리하기 위함입니다.
+
+---
+
+## [2026-06-09] Phase 4 데이터베이스 스키마 변경 보고
+
+### 1. 데이터베이스 테이블 스키마 신규 추가 및 복합 인덱스 구성
+* **대상 테이블**: `embeddings`
+* **상세 구조**:
+  * `id`: UUID (Primary Key)
+  * `chunk_id`: UUID (외래 키, chunks 테이블의 id 참조. ON DELETE CASCADE, UNIQUE 제약 조건 수립)
+  * `embedding`: VECTOR(1536) (임베딩 1536차원 벡터 데이터)
+  * `model_name`: VARCHAR(100) (임베딩 모델명, e.g., text-embedding-3-small)
+  * `created_at`: TIMESTAMP (생성 일시)
+* **인덱스 추가**:
+  * `idx_embeddings_chunk_model` ON `embeddings(chunk_id, model_name)` (복합 인덱스 구성)
+* **사유**: OpenAI 임베딩을 일치하는 청크와 1:1 결합하여 적재하되, 차후 다른 임베딩 모델로의 전환과 모델별 유사도 연산 격리를 가능하게 하려고 `model_name`과 `chunk_id`를 묶어 복합 인덱스를 구성했습니다.

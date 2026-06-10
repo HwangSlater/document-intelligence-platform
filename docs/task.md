@@ -1,15 +1,9 @@
-# Phase 3 구현 작업 목록
+# Phase 6 구현 작업 목록
 
-- [x] 데이터베이스 chunks 스키마 추가 및 사전 보고서 기록 (`docs/decision-request.md`)
-- [x] `application.yml`에 청킹 관련 설정 추가 (`app.chunking.size`, `app.chunking.overlap`)
-- [x] `Chunk` 도메인 엔티티 및 `ChunkRepository` 개발
-- [x] `ChunkingService` 개발 (Spring AI `TokenTextSplitter` 연동)
-- [x] DocumentService 수정 (텍스트 추출 후 ChunkingService.splitAndSave 호출 및 통계 로깅 추가)
-- [x] 전체 빌드 및 테스트 동작 여부 검증 (`./gradlew build`)
-- [x] 기능별 로컬 저장소 커밋 진행 및 최종 Push 상태 검증
-- [x] Phase 3 종료 보고서 작성 (`docs/agent-reports/phase-03-report.md`)
+- [x] `RagRequest.java` DTO 개발 (question 단일 필드)
+- [x] `RagResponse.java` DTO 개발 (question, answer 필드 포함)
+- [x] `RagService.java` 개발 (검색 결과 부재 시 조기 우회 반환 로직 적용, ChatModel 호출 및 Prompt 상수 매핑)
+- [x] `RagController.java` 개발 (POST /api/v1/rag/ask 엔드포인트 구현)
+- [x] `RagServiceTest.java` 단위 테스트 개발 (일반 RAG 성공 및 검색 결과 부재 시 조기 우회 반환 동작 검증)
+- [x] `./gradlew build` 전체 빌드 및 테스트 통과 성공 여부 검증
 
-## Phase 3.5 추가 최적화 작업 목록
-- [x] 청킹 파라미터 최적화 실험 수행 (chunk-size: 300, 500, 800, 1000)
-- [x] 실험 데이터를 토대로 RAG 최적 기본값 제안 및 yml 적용
-- [x] Phase 3.5 최적화 실험 보고서 작성 (`docs/agent-reports/phase-03.5-report.md`)

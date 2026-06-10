@@ -1,6 +1,7 @@
 package com.documentintelligenceapplication.presentation.controller;
 
 import com.documentintelligenceapplication.application.service.DocumentService;
+import com.documentintelligenceapplication.application.service.EmbeddingService;
 import com.documentintelligenceapplication.presentation.dto.DocumentListResponse;
 import com.documentintelligenceapplication.presentation.dto.DocumentUploadResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.UUID;
 public class DocumentController {
 
     private final DocumentService documentService;
+    private final EmbeddingService embeddingService;
 
     @PostMapping
     public ResponseEntity<DocumentUploadResponse> uploadDocument(@RequestParam("file") MultipartFile file) {
@@ -35,4 +37,11 @@ public class DocumentController {
     public void deleteDocument(@PathVariable("id") UUID id) {
         documentService.deleteDocument(id);
     }
+
+    @PostMapping("/{id}/embed")
+    @ResponseStatus(HttpStatus.OK)
+    public void embedDocument(@PathVariable("id") UUID id) {
+        embeddingService.embedDocument(id);
+    }
 }
+
