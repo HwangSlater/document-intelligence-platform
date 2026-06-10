@@ -47,7 +47,7 @@ graph TD
     Controller -->|RagRequest| Service[RagService]
     Service -->|search question, limit=5| Retrieval[RetrievalService]
     Retrieval -->|query text| OpenAI_Embed[OpenAI EmbeddingModel]
-    OpenAI_Embed -->|float[] queryVector| Retrieval
+    OpenAI_Embed -->|float array queryVector| Retrieval
     Retrieval -->|queryVector, limit| Store[EmbeddingStore]
     Store -->|JdbcTemplate SQL Cosine Distance ASC| DB[(PGVector DB)]
     DB -->|Result Rows| Store
