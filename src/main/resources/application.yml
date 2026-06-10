@@ -41,3 +41,10 @@ app:
   chunking:
     size: 500
     overlap: 100
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
