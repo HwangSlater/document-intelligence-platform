@@ -576,14 +576,14 @@
     <!-- Left Column: Document Storage -->
     <section class="card">
       <h2 class="card-title">
-        📁 문서 보관소 (Document Repository)
+        문서 보관소 (Document Repository)
         <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);" id="doc-count">0개 문서</span>
       </h2>
 
       <!-- Upload Zone -->
       <label class="upload-zone" id="drop-zone">
         <input type="file" id="file-input" accept=".pdf">
-        <div class="upload-icon">📤</div>
+        <div class="upload-icon" style="font-size: 1.5rem; margin-bottom: 0.5rem; font-weight: bold; color: var(--primary);">[PDF]</div>
         <div class="upload-text">
           <h3>분석할 PDF 파일 업로드</h3>
           <p>마우스로 드래그하거나 클릭하여 파일을 선택하세요 (최대 100MB)</p>
@@ -616,17 +616,17 @@
     <section class="card">
       <!-- Tabs -->
       <div class="tabs-header">
-        <button class="tab-btn active" onclick="switchTab('rag-tab')">💬 RAG Q&A (문서 기반 QA)</button>
-        <button class="tab-btn" onclick="switchTab('search-tab')">🔍 Semantic Search (유사도 검색)</button>
+        <button class="tab-btn active" onclick="switchTab('rag-tab')">RAG Q&A (문서 기반 QA)</button>
+        <button class="tab-btn" onclick="switchTab('search-tab')">Semantic Search (유사도 검색)</button>
       </div>
 
       <!-- Tab 1: RAG Q&A -->
       <div id="rag-tab" class="tab-content active">
         <!-- Suggestion chips -->
         <div class="suggestions">
-          <button class="suggestion-btn" onclick="applySuggestion('경남대 대학원 학칙 상 수료를 위해 필요한 최저 취득 학점 규정은?')">🎓 대학원 수료 학점 규정</button>
-          <button class="suggestion-btn" onclick="applySuggestion('가명처리 시 추가 정보의 격리 보관 및 안전성 확보 조치 의무는?')">🔒 가명처리 격리 보관 의무</button>
-          <button class="suggestion-btn" onclick="applySuggestion('RDBMS에 벡터 데이터를 적재할 때 데이터 무결성을 보장하기 위해 적용한 DDL 제약조건은?')">⚠️ DDL 제약조건 (결측 질문)</button>
+          <button class="suggestion-btn" onclick="applySuggestion('경남대 대학원 학칙 상 수료를 위해 필요한 최저 취득 학점 규정은?')">대학원 수료 학점 규정</button>
+          <button class="suggestion-btn" onclick="applySuggestion('가명처리 시 추가 정보의 격리 보관 및 안전성 확보 조치 의무는?')">가명처리 격리 보관 의무</button>
+          <button class="suggestion-btn" onclick="applySuggestion('RDBMS에 벡터 데이터를 적재할 때 데이터 무결성을 보장하기 위해 적용한 DDL 제약조건은?')">DDL 제약조건 (결측 질문)</button>
         </div>
 
         <div class="chat-container">
@@ -773,7 +773,7 @@
 
       tbody.innerHTML = docs.map(doc => {
         const isEmbedded = embeddedDocs.has(doc.id);
-        const embedText = isEmbedded ? "임베딩 완료 ✓" : "임베딩 실행";
+        const embedText = isEmbedded ? "임베딩 완료" : "임베딩 실행";
         const embedClass = isEmbedded ? "" : "btn-primary";
         const embedDisabled = isEmbedded ? "disabled" : "";
 
@@ -848,7 +848,7 @@
         embeddedDocs.add(id);
         localStorage.setItem('embedded_docs', JSON.stringify(Array.from(embeddedDocs)));
 
-        btn.innerText = "임베딩 완료 ✓";
+        btn.innerText = "임베딩 완료";
         btn.className = "btn";
         btn.disabled = true;
         showToast("성공: pgvector 임베딩이 생성되어 적재되었습니다.");
