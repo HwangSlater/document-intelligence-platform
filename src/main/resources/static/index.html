@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Intelligence Platform</title>
+  <!-- Google Fonts - Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --success-bg: #e6fbf2;
+      --warning: #d97706;
+      --warning-bg: #fffbeb;
+      --danger: #ef4444;
+      --danger-bg: #fee2e2;
+      --radius: 12px;
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-section h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.025em;
+    }
+
+    .logo-section p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .badge-dev {
+      background-color: #f1f5f9;
+      color: #475569;
+      padding: 0.25rem 0.625rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+    }
+
+    main {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      height: fit-content;
+    }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+
+    /* Upload Zone */
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      background-color: #fafafa;
+    }
+
+    .upload-zone:hover {
+      border-color: var(--primary);
+      background-color: #f0f7ff;
+    }
+
+    .upload-zone input {
+      display: none;
+    }
+
+    .upload-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .upload-text h3 {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .upload-text p {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    /* Document List Table */
+    .table-container {
+      margin-top: 1.5rem;
+      overflow-x: auto;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    th {
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background-color: #f8fafc;
+    }
+
+    td {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-badge.parsed {
+      background-color: var(--success-bg);
+      color: var(--success);
+    }
+
+    .status-badge.failed {
+      background-color: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .status-badge.uploaded {
+      background-color: #f1f5f9;
+      color: #64748b;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      padding: 0.375rem 0.75rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+      background-color: #ffffff;
+      color: var(--text);
+    }
+
+    .btn:hover {
+      background-color: #f8fafc;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-danger {
+      color: var(--danger);
+      border-color: var(--border);
+    }
+
+    .btn-danger:hover {
+      background-color: var(--danger-bg);
+      border-color: var(--danger);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background-color: #f1f5f9 !important;
+      border-color: var(--border) !important;
+      color: var(--text-muted) !important;
+    }
+
+    .btn-action-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* Tabs */
+    .tabs-header {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.25rem;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      border: none;
+      background: none;
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* RAG QA Tab */
+    .chat-container {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      background-color: #f8fafc;
+      overflow: hidden;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 1.25rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .message {
+      max-width: 85%;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      word-break: break-all;
+    }
+
+    .message.system {
+      align-self: flex-start;
+      background-color: #ffffff;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .message.bypass {
+      align-self: flex-start;
+      background-color: var(--warning-bg);
+      border: 1px solid #fde047;
+      color: var(--warning);
+      font-weight: 500;
+    }
+
+    .message.loading {
+      align-self: flex-start;
+      background-color: #ffffff;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dots {
+      display: inline-flex;
+      gap: 3px;
+    }
+
+    .dots span {
+      width: 6px;
+      height: 6px;
+      background-color: var(--text-muted);
+      border-radius: 50%;
+      animation: blink 1.4s infinite both;
+    }
+
+    .dots span:nth-child(2) { animation-delay: .2s; }
+    .dots span:nth-child(3) { animation-delay: .4s; }
+
+    @keyframes blink {
+      0% { opacity: .2; }
+      20% { opacity: 1; }
+      100% { opacity: .2; }
+    }
+
+    .chat-input-area {
+      display: flex;
+      padding: 0.75rem;
+      background-color: #ffffff;
+      border-top: 1px solid var(--border);
+      gap: 0.5rem;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.625rem 0.875rem;
+      font-size: 0.875rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .chat-input-area input:focus {
+      border-color: var(--primary);
+    }
+
+    /* Prompt Suggestions */
+    .suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .suggestion-btn {
+      background-color: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      padding: 0.375rem 0.875rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+    }
+
+    .suggestion-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background-color: #f0f7ff;
+    }
+
+    /* Semantic Search Tab */
+    .search-control {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-control input {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.625rem 0.875rem;
+      font-size: 0.875rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-control input:focus {
+      border-color: var(--primary);
+    }
+
+    .search-control .limit-select {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.625rem;
+      font-size: 0.875rem;
+      outline: none;
+      background-color: #ffffff;
+    }
+
+    .search-results {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-height: 400px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .search-result-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      background-color: #ffffff;
+      transition: var(--transition);
+    }
+
+    .search-result-card:hover {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      border-color: #cbd5e1;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.625rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .score-badge {
+      background-color: #eff6ff;
+      color: var(--primary);
+      padding: 0.125rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .result-content {
+      font-size: 0.875rem;
+      color: var(--text);
+      white-space: pre-wrap;
+      background-color: #f8fafc;
+      padding: 0.75rem;
+      border-radius: 6px;
+      border: 1px solid #f1f5f9;
+    }
+
+    .progress-bar-bg {
+      background-color: #e2e8f0;
+      border-radius: 9999px;
+      height: 4px;
+      width: 100%;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      background-color: var(--primary);
+      height: 100%;
+      border-radius: 9999px;
+      transition: width 0.5s ease-in-out;
+    }
+
+    /* Notification */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background-color: #1e293b;
+      color: #ffffff;
+      padding: 0.875rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      display: none;
+      z-index: 100;
+      animation: fadeInUp 0.3s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(1rem); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <div class="logo-section">
+        <h1>Document Intelligence Platform</h1>
+        <p>문서를 저장하는 시스템이 아니라, 문서를 이해하는 시스템</p>
+      </div>
+      <div>
+        <span class="badge-dev">RAG Backend MVP</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left Column: Document Storage -->
+    <section class="card">
+      <h2 class="card-title">
+        📁 문서 보관소 (Document Repository)
+        <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted);" id="doc-count">0개 문서</span>
+      </h2>
+
+      <!-- Upload Zone -->
+      <label class="upload-zone" id="drop-zone">
+        <input type="file" id="file-input" accept=".pdf">
+        <div class="upload-icon">📤</div>
+        <div class="upload-text">
+          <h3>분석할 PDF 파일 업로드</h3>
+          <p>마우스로 드래그하거나 클릭하여 파일을 선택하세요 (최대 100MB)</p>
+        </div>
+      </label>
+
+      <!-- Document Table -->
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>파일명</th>
+              <th>크기</th>
+              <th>상태</th>
+              <th>액션</th>
+            </tr>
+          </thead>
+          <tbody id="document-table-body">
+            <tr>
+              <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                등록된 문서가 없습니다. PDF를 업로드해 보세요.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Right Column: Interactive Search & Chat -->
+    <section class="card">
+      <!-- Tabs -->
+      <div class="tabs-header">
+        <button class="tab-btn active" onclick="switchTab('rag-tab')">💬 RAG Q&A (문서 기반 QA)</button>
+        <button class="tab-btn" onclick="switchTab('search-tab')">🔍 Semantic Search (유사도 검색)</button>
+      </div>
+
+      <!-- Tab 1: RAG Q&A -->
+      <div id="rag-tab" class="tab-content active">
+        <!-- Suggestion chips -->
+        <div class="suggestions">
+          <button class="suggestion-btn" onclick="applySuggestion('경남대 대학원 학칙 상 수료를 위해 필요한 최저 취득 학점 규정은?')">🎓 대학원 수료 학점 규정</button>
+          <button class="suggestion-btn" onclick="applySuggestion('가명처리 시 추가 정보의 격리 보관 및 안전성 확보 조치 의무는?')">🔒 가명처리 격리 보관 의무</button>
+          <button class="suggestion-btn" onclick="applySuggestion('RDBMS에 벡터 데이터를 적재할 때 데이터 무결성을 보장하기 위해 적용한 DDL 제약조건은?')">⚠️ DDL 제약조건 (결측 질문)</button>
+        </div>
+
+        <div class="chat-container">
+          <div class="chat-messages" id="chat-messages">
+            <div class="message system">
+              안녕하세요! 업로드된 문서의 지식을 바탕으로 답변해 드립니다. 위의 추천 질문을 누르거나 아래 입력창에 질문을 입력해 보세요.
+            </div>
+          </div>
+          <form class="chat-input-area" id="chat-form" onsubmit="handleChatSubmit(event)">
+            <input type="text" id="chat-input" placeholder="문서에 대해 질문을 입력하세요..." required autocomplete="off">
+            <button type="submit" class="btn btn-primary" id="chat-send-btn">전송</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tab 2: Semantic Search -->
+      <div id="search-tab" class="tab-content">
+        <div class="search-control">
+          <input type="text" id="search-query" placeholder="유사도 검색어를 입력하세요..." autocomplete="off">
+          <select id="search-limit" class="limit-select">
+            <option value="3">3개 청크</option>
+            <option value="5" selected>5개 청크</option>
+            <option value="10">10개 청크</option>
+          </select>
+          <button class="btn btn-primary" onclick="handleSearch()">검색</button>
+        </div>
+        <div class="search-results" id="search-results">
+          <div style="text-align: center; color: var(--text-muted); padding: 3rem 0;">
+            검색어를 입력하고 검색 버튼을 누르면 DB 내 유사 청크들을 추출합니다.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast Message -->
+  <div class="toast" id="toast">알림 메시지</div>
+
+  <script>
+    // Constants
+    const BYPASS_MESSAGE = "제공된 문서 내에 해당 질문에 답변할 수 있는 관련 정보가 존재하지 않습니다.";
+
+    // Active tracking for UI
+    let embeddedDocs = new Set(JSON.parse(localStorage.getItem('embedded_docs') || '[]'));
+
+    // Initialize Page
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchDocuments();
+
+      // Drag and Drop listeners
+      const dropZone = document.getElementById("drop-zone");
+      const fileInput = document.getElementById("file-input");
+
+      dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = "var(--primary)";
+        dropZone.style.backgroundColor = "#f0f7ff";
+      });
+
+      dropZone.addEventListener("dragleave", () => {
+        dropZone.style.borderColor = "var(--border)";
+        dropZone.style.backgroundColor = "#fafafa";
+      });
+
+      dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = "var(--border)";
+        dropZone.style.backgroundColor = "#fafafa";
+        if (e.dataTransfer.files.length > 0) {
+          uploadFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      fileInput.addEventListener("change", () => {
+        if (fileInput.files.length > 0) {
+          uploadFile(fileInput.files[0]);
+        }
+      });
+    });
+
+    // Toast show helper
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.innerText = message;
+      toast.style.display = "block";
+      setTimeout(() => {
+        toast.style.display = "none";
+      }, 3000);
+    }
+
+    // Switch Tabs
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
+      
+      document.getElementById(tabId).classList.add("active");
+      
+      // Active styling for tabs
+      const btnIndex = tabId === "rag-tab" ? 0 : 1;
+      document.querySelectorAll(".tab-btn")[btnIndex].classList.add("active");
+    }
+
+    // Apply suggestions to chat
+    function applySuggestion(text) {
+      document.getElementById("chat-input").value = text;
+      document.getElementById("chat-input").focus();
+    }
+
+    // Format size
+    function formatBytes(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // API: Fetch Documents
+    async function fetchDocuments() {
+      try {
+        const response = await fetch("/api/v1/documents");
+        if (!response.ok) throw new Error("문서 목록 조회 실패");
+        const list = await response.json();
+        
+        document.getElementById("doc-count").innerText = `${list.length}개 문서`;
+        renderDocumentTable(list);
+      } catch (err) {
+        showToast("Error: " + err.message);
+      }
+    }
+
+    // Render Document list
+    function renderDocumentTable(docs) {
+      const tbody = document.getElementById("document-table-body");
+      if (docs.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+              등록된 문서가 없습니다. PDF를 업로드해 보세요.
+            </td>
+          </tr>`;
+        return;
+      }
+
+      tbody.innerHTML = docs.map(doc => {
+        const isEmbedded = embeddedDocs.has(doc.id);
+        const embedText = isEmbedded ? "임베딩 완료 ✓" : "임베딩 실행";
+        const embedClass = isEmbedded ? "" : "btn-primary";
+        const embedDisabled = isEmbedded ? "disabled" : "";
+
+        return `
+          <tr id="doc-${doc.id}">
+            <td style="font-weight: 500; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${doc.fileName}">
+              ${doc.fileName}
+            </td>
+            <td>${formatBytes(doc.fileSize)}</td>
+            <td>
+              <span class="status-badge ${doc.status.toLowerCase()}">${doc.status}</span>
+            </td>
+            <td>
+              <div class="btn-action-group">
+                <button class="btn ${embedClass}" id="embed-btn-${doc.id}" onclick="triggerEmbedding('${doc.id}')" ${embedDisabled}>
+                  ${embedText}
+                </button>
+                <button class="btn btn-danger" onclick="deleteDocument('${doc.id}')">
+                  삭제
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // API: Upload File
+    async function uploadFile(file) {
+      if (file.type !== "application/pdf" && !file.name.endsWith(".pdf")) {
+        showToast("PDF 파일만 업로드할 수 있습니다.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      showToast("PDF 파일을 업로드 및 분석 중...");
+
+      try {
+        const response = await fetch("/api/v1/documents", {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) {
+          const errMsg = await response.text();
+          throw new Error(errMsg || "업로드 실패");
+        }
+
+        showToast("문서 업로드 및 파싱 완료!");
+        fetchDocuments();
+      } catch (err) {
+        showToast("업로드 오류: " + err.message);
+      }
+    }
+
+    // API: Embed Document
+    async function triggerEmbedding(id) {
+      const btn = document.getElementById(`embed-btn-${id}`);
+      btn.innerText = "임베딩 생성 중...";
+      btn.disabled = true;
+
+      try {
+        const response = await fetch(`/api/v1/documents/${id}/embed`, {
+          method: "POST"
+        });
+
+        if (!response.ok) throw new Error("임베딩 생성 오류");
+
+        // Save status locally
+        embeddedDocs.add(id);
+        localStorage.setItem('embedded_docs', JSON.stringify(Array.from(embeddedDocs)));
+
+        btn.innerText = "임베딩 완료 ✓";
+        btn.className = "btn";
+        btn.disabled = true;
+        showToast("성공: pgvector 임베딩이 생성되어 적재되었습니다.");
+      } catch (err) {
+        showToast("임베딩 실패: " + err.message);
+        btn.innerText = "임베딩 실행";
+        btn.disabled = false;
+      }
+    }
+
+    // API: Delete Document
+    async function deleteDocument(id) {
+      if (!confirm("해당 문서를 삭제하시겠습니까? 데이터베이스의 모든 청크 및 벡터 데이터도 삭제됩니다.")) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/v1/documents/${id}`, {
+          method: "DELETE"
+        });
+
+        if (!response.ok) throw new Error("문서 삭제 실패");
+
+        embeddedDocs.delete(id);
+        localStorage.setItem('embedded_docs', JSON.stringify(Array.from(embeddedDocs)));
+
+        showToast("문서 삭제 완료.");
+        fetchDocuments();
+      } catch (err) {
+        showToast("Error: " + err.message);
+      }
+    }
+
+    // API: Chat submit (RAG)
+    async function handleChatSubmit(event) {
+      event.preventDefault();
+      const input = document.getElementById("chat-input");
+      const question = input.value.trim();
+      if (!question) return;
+
+      input.value = "";
+      addMessage(question, "user");
+
+      // Show loader
+      const messagesContainer = document.getElementById("chat-messages");
+      const loaderId = "loading-" + Date.now();
+      const loaderDiv = document.createElement("div");
+      loaderDiv.id = loaderId;
+      loaderDiv.className = "message loading";
+      loaderDiv.innerHTML = `생각 중<div class="dots"><span></span><span></span><span></span></div>`;
+      messagesContainer.appendChild(loaderDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+      // Disable inputs
+      document.getElementById("chat-send-btn").disabled = true;
+
+      try {
+        const response = await fetch("/api/v1/rag/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question })
+        });
+
+        if (!response.ok) throw new Error("QA 답변 생성에 실패했습니다.");
+        const resData = await response.json();
+
+        // Remove Loader
+        document.getElementById(loaderId).remove();
+
+        const answer = resData.answer;
+        if (answer.trim() === BYPASS_MESSAGE || answer.includes("관련 정보가 존재하지 않습니다")) {
+          addMessage(answer, "bypass");
+        } else {
+          addMessage(answer, "system");
+        }
+      } catch (err) {
+        document.getElementById(loaderId).remove();
+        addMessage("오류: " + err.message, "system");
+      } finally {
+        document.getElementById("chat-send-btn").disabled = false;
+      }
+    }
+
+    // Add Message Node
+    function addMessage(text, sender) {
+      const messagesContainer = document.getElementById("chat-messages");
+      const messageDiv = document.createElement("div");
+      messageDiv.className = `message ${sender}`;
+      messageDiv.innerText = text;
+      messagesContainer.appendChild(messageDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // API: Semantic Search
+    async function handleSearch() {
+      const queryInput = document.getElementById("search-query");
+      const query = queryInput.value.trim();
+      if (!query) {
+        showToast("유사도 검색어를 입력하세요.");
+        return;
+      }
+
+      const limit = document.getElementById("search-limit").value;
+      const resultsContainer = document.getElementById("search-results");
+      resultsContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 3rem 0;">
+        검색 중...
+      </div>`;
+
+      try {
+        const response = await fetch(`/api/v1/search?query=${encodeURIComponent(query)}&limit=${limit}`);
+        if (!response.ok) throw new Error("유사도 검색 실패");
+        const list = await response.json();
+
+        renderSearchResults(list);
+      } catch (err) {
+        resultsContainer.innerHTML = `<div style="text-align: center; color: var(--danger); padding: 3rem 0;">
+          검색 오류: ${err.message}
+        </div>`;
+      }
+    }
+
+    // Render Chunks Result
+    function renderSearchResults(results) {
+      const container = document.getElementById("search-results");
+      if (results.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 3rem 0;">
+          유사도가 일치하는 검색 결과 청크가 없습니다.
+        </div>`;
+        return;
+      }
+
+      container.innerHTML = results.map(res => {
+        const percentage = Math.round(res.similarity * 1000) / 10; // e.g. 88.6%
+        return `
+          <div class="search-result-card">
+            <div class="result-header">
+              <span>문서 ID: ${res.documentId.substring(0, 8)}...</span>
+              <span class="score-badge">유사도: ${percentage}%</span>
+            </div>
+            <div class="result-content">${res.content}</div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar" style="width: ${percentage}%"></div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+  </script>
+
+</body>
+</html>
