@@ -1,6 +1,9 @@
 spring:
   application:
     name: document-intelligence-platform
+  config:
+    import:
+      - optional:classpath:application-local.yml
   
   servlet:
     multipart:
@@ -29,7 +32,7 @@ spring:
 
   ai:
     openai:
-      api-key: ${OPENAI_API_KEY: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}
+      api-key: ${OPENAI_API_KEY:}
       chat:
         options:
           model: gpt-4o
